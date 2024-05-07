@@ -56,7 +56,7 @@ class Mario:
         # EXPLOIT
         else:
             state = state[0].__array__() if isinstance(state, tuple) else state.__array__()
-            state = torch.tensor(state, device=self.device).unsqueeze(0)
+            state = torch.tensor(state, device=self.device, dtype=torch.float32).unsqueeze(0)
             action_values = self.net(state, model="online")
             action_idx = torch.argmax(action_values, axis=1).item()
 
@@ -87,11 +87,11 @@ class Mario:
         state = np.array(state, dtype=np.float32)
         next_state = np.array(next_state, dtype=np.float32)
 
-        state = torch.tensor(state)
-        next_state = torch.tensor(next_state)
-        action = torch.tensor([action])
-        reward = torch.tensor([reward])
-        done = torch.tensor([done])
+        state = torch.tensor(state, dtype=torch.float32)
+        next_state = torch.tensor(next_state, dtype=torch.float32)
+        action = torch.tensor([action], dtype=torch.long)
+        reward = torch.tensor([reward], dtype=torch.double)
+        done = torch.tensor([done], dtype=torch.bool)
 
         # self.memory.append((state, next_state, action, reward, done,))
         self.memory.add(TensorDict({"state": state, "next_state": next_state, "action": action, "reward": reward, "done": done}, batch_size=[]))
